@@ -1,0 +1,139 @@
+(doc times)
+(doc dotimes)
+(dotimes 2 (prn "hi"))
+(dotimes [i 2] (prn "hi"))
+(def d 
+(dotimes [i 2] (prn "hi")))
+(doc docalls)
+(doc docall)
+(doc mapcall)
+(doc pcall)
+(doc pcalls)
+(doc pvalues)
+(pvalues (prn "hi"))
+(pvalues (prn "hi") (prn "hi2"))
+(apply pvalues (doseq [i (range 10)] (prn "hi " i)))
+(doc repeat)
+(do dotimes)
+(apply pvalues (repeat 10 (prn "hi " i)))
+(let [[a b & c] [1 2 3 4 5] (prn c))
+(let [[a b & c] [1 2 3 4 5]] (prn c))
+(use 'fun-utils.core)
+(apply-get-create {} :a inc (fn [& args] 1) ) => {:a 1}
+;;using refs
+(let [v (ref {})]
+             (dosync
+               (alter v apply-get-create :a (fn [agnt] (send agnt inc)) (fn [& args] (agent 1)))
+               (alter v apply-get-create :a (fn [agnt] (send agnt inc)) (fn [& args] (agent 1))) )
+             
+              (= (deref (:a @v)) 4)
+              
+             )
+(= (apply-get-create {} :a inc (fn [& args] 1) ) {:a 1})
+(let [v (ref {})]
+             (dosync
+               (alter v apply-get-create :a (fn [agnt] (send agnt inc)) (fn [& args] (agent 1)))
+               (alter v apply-get-create :a (fn [agnt] (send agnt inc)) (fn [& args] (agent 1))) )
+              (prn (:a @v))
+              
+              (Thread/sleep 500)
+              (= (deref (:a @v)) 4)
+              
+             )
+(use 'fun-utils.core)
+ (let [base-dir (doto (File. "target/tests/star-channel-tests/concurrent") (.mkdirs))
+       {:keys [send close]} (star-channel)
+       file-a (doto (File. base-dir "file-a") (.delete) (.createNewFile))
+       file-b (doto (File. base-dir "file-b") (.delete) (.createNewFile))
+       exec (Executors/newCachedThreadPool)]
+       (dotimes [i 100]
+              (submit exec #(send :a (fn [f] (spit f (str i "\n") :append true)) file-a) ))
+                   
+       (dotimes [i 100]
+              (submit exec #(send :b (fn [f] (spit f (str i "\n") :append true)) file-b) ))
+)
+(use 'fun-utils.core)
+(import 'java.util.concurrent.Executors)
+(import 'java.util.concurrent.TimeUnit)
+(use 'fun-utils.core)
+(import 'java.util.concurrent.Executors)
+(import 'java.util.concurrent.TimeUnit)
+ (let [base-dir (doto (File. "target/tests/star-channel-tests/concurrent") (.mkdirs))
+       {:keys [send close]} (star-channel)
+       file-a (doto (File. base-dir "file-a") (.delete) (.createNewFile))
+       file-b (doto (File. base-dir "file-b") (.delete) (.createNewFile))
+       exec (Executors/newCachedThreadPool)]
+                   
+       (dotimes [i 100]
+              (submit exec #(send :a (fn [f] (spit f (str i "\n") :append true)) file-a) ))
+                   
+       (dotimes [i 100]
+              (submit exec #(send :b (fn [f] (spit f (str i "\n") :append true)) file-b) ))
+          
+       ;wait for threads
+       (doto exec (.shutdown) (.awaitTermination 10 TimeUnit/SECONDS))
+                       
+       (prn (->> file-a (clojure.java.io/reader) (line-seq) (map #(Long.parseLong %)) sort)
+       
+                           )
+)
+(import 'java.util.concurrent.Executors)
+(import 'java.util.concurrent.TimeUnit)
+(import 'java.io.File)
+ (let [base-dir (doto (File. "target/tests/star-channel-tests/concurrent") (.mkdirs))
+       {:keys [send close]} (star-channel)
+       file-a (doto (File. base-dir "file-a") (.delete) (.createNewFile))
+       file-b (doto (File. base-dir "file-b") (.delete) (.createNewFile))
+       exec (Executors/newCachedThreadPool)]
+                   
+       (dotimes [i 100]
+              (submit exec #(send :a (fn [f] (spit f (str i "\n") :append true)) file-a) ))
+                   
+       (dotimes [i 100]
+              (submit exec #(send :b (fn [f] (spit f (str i "\n") :append true)) file-b) ))
+          
+       ;wait for threads
+       (doto exec (.shutdown) (.awaitTermination 10 TimeUnit/SECONDS))
+                       
+       (prn (->> file-a (clojure.java.io/reader) (line-seq) (map #(Long.parseLong %)) sort)
+       
+                           )
+)
+(Long/
+ (let [base-dir (doto (File. "target/tests/star-channel-tests/concurrent") (.mkdirs))
+       {:keys [send close]} (star-channel)
+       file-a (doto (File. base-dir "file-a") (.delete) (.createNewFile))
+       file-b (doto (File. base-dir "file-b") (.delete) (.createNewFile))
+       exec (Executors/newCachedThreadPool)]
+                   
+       (dotimes [i 100]
+              (submit exec #(send :a (fn [f] (spit f (str i "\n") :append true)) file-a) ))
+                   
+       (dotimes [i 100]
+              (submit exec #(send :b (fn [f] (spit f (str i "\n") :append true)) file-b) ))
+          
+       ;wait for threads
+       (doto exec (.shutdown) (.awaitTermination 10 TimeUnit/SECONDS))
+                       
+       (prn (->> file-a (clojure.java.io/reader) (line-seq) (map #(Long/parseLong %)) sort)
+       
+                           ))
+ (let [base-dir (doto (File. "target/tests/star-channel-tests/concurrent") (.mkdirs))
+       {:keys [send close]} (star-channel)
+       file-a (doto (File. base-dir "file-a") (.delete) (.createNewFile))
+       file-b (doto (File. base-dir "file-b") (.delete) (.createNewFile))
+       exec (Executors/newCachedThreadPool)]
+                   
+       (dotimes [i 100]
+              (submit exec #(send :a (fn [f] (spit f (str i "\n") :append true)) file-a) ))
+                   
+       (dotimes [i 100]
+              (submit exec #(send :b (fn [f] (spit f (str i "\n") :append true)) file-b) ))
+          
+       ;wait for threads
+       (doto exec (.shutdown) (.awaitTermination 10 TimeUnit/SECONDS))
+                       
+       (prn (->> file-a (clojure.java.io/reader) (line-seq) (map #(Long/parseLong %)) sort)
+       
+                           ))
+quit
