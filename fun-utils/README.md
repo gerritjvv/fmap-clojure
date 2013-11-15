@@ -8,11 +8,15 @@ Clojure utility functions that come up time and again while developing clojure s
 Best way to see how to use them is going through the unit tests.
 I've tried to test each utlity function in its own test file.
 
+```
+[fun-utils "0.1.0"]
+```
+
 ## fixdelay
 
 Use's clojure.core.async timeout to run an expression every n milliseconds.
 
-### Usage
+Example
 
 ```clojure
 
@@ -101,4 +105,4 @@ Example
 
 ## License
 
-Apache v2
+ECLIPSE PUBLIC LICENSE

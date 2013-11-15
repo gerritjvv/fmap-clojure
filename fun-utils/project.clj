@@ -1,7 +1,7 @@
-(defproject fun-utils "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
-  :license {:name "Eclipse Public License"
+(defproject fun-utils "0.1.0"
+  :description "Clojure utility functions that come up time and again while developing clojure software"
+  :url "https://github.com/gerritjvv/fmap-clojure/tree/master/fun-utils"
+  :license {:name "ECLIPSE PUBLIC LICENSE"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
   :plugins [
