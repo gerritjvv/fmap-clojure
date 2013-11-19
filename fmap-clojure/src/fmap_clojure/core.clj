@@ -12,7 +12,8 @@
 (def shared-io-star-chan (star-channel))
 
 (defprotocol Functor
-     (fmap [t f]))
+     (fmap [t f])
+     (lift [t]))
 
 ;just is used when a data type implements 
 ;several interfaces and fmap cannot be clearly applied
@@ -23,28 +24,37 @@
    
    java.lang.Object
    (fmap [v f] (f v))
+   (lift [v] v)
    
    Just
    (fmap [v f] (Just. (f (:v v))))
+   (lift [v] (:v v))
    
    nil
    (fmap [v f] nil)
+   (lift [v] nil)
    
    clojure.lang.IFn
    (fmap [v f] (prn "comp : " (type v))(comp f v))
+   (lift [v] v)
    
    clojure.lang.Seqable
    (fmap [v f] (map f v))
+   (lift [v] v)
    
    clojure.lang.PersistentVector
    (fmap [v f] (map f v))
+   (lift [v] v)
    
    java.util.Collection
    (fmap [v f] (map f v))
+   (lift [v] v)
    
    SharedIO
    (fmap [ {:keys [k io]} f ]
         ((:send shared-io-star-chan) k f io))
+   (lift [v] v)
+   
   )
 
 (defn <*> [fs args]
