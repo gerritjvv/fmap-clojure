@@ -1,6 +1,7 @@
 # fmap-clojure
 
- Under construction 
+Clojure monad library by using functors and copying to simplicity of haskell
+
 
 # Rationale
 
