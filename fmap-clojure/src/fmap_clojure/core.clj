@@ -15,10 +15,16 @@
      (fmap [t f])
      (lift [t]))
 
+(defprotocol Applicative
+    (<*> [v f]))
+
 ;just is used when a data type implements 
 ;several interfaces and fmap cannot be clearly applied
 ;but for most of the times use the value and not just
 (defrecord Just [v])
+
+(defn just [v]
+  (->Just v))
 
 (extend-protocol Functor
    
@@ -57,12 +63,43 @@
    
   )
 
-(defn <*> [fs args]
-  "Applicative function that applies each function in f over each argument in a,
-   the application of each function is done using fmap so that if argument a is a list
-   the function is again applied as map f a"
-  (for [f fs 
+(extend-protocol Applicative
+   
+   java.lang.Object
+   (<*> [fs args]
+     (fmap fs args))
+   
+   Just
+   (<*> [fs args]
+      (fmap args (:v fs)))
+   
+   nil
+   (<*> [f args] nil)
+   
+   clojure.lang.IFn
+   (<*> [f args]
+      (fmap args f))
+   
+   clojure.lang.Seqable
+   (<*> [fs args]
+      (for [f fs 
         a args] (fmap a f)))
+   
+   clojure.lang.PersistentVector
+   (<*> [fs args]
+      (for [f fs 
+        a args] (fmap a f)))
+   
+   java.util.Collection
+   (<*> [fs args]
+      (for [f fs 
+        a args] (fmap a f)))
+   
+   SharedIO
+   (<*> [fs args]
+     (fmap args fs))
+   
+  )
 
 (defn ID [x] x)
 
@@ -74,6 +111,47 @@
    (1 2 3 4 inc) => (apply inc 1 2 3 4)
    "
   )
+
+(def >>= fmap)
+
+(defmacro >>=* [& body]
+  "
+   (>>=* [1 2 3] inc dec :just) 
+   ;; fmap_clojure.core.Just{:v 3}
+   (>>=* [1 2 3] inc dec :just count :lift)
+   ;; 3
+   (>>=* [1 2 3] inc dec :apply str)
+   ;; \"123\"
+   (>>=* [1 2 3] inc dec str)
+   ;; [\"1\" \"2\" \"3\"]
+  "
+       (let [cnt (count body)]
+           (cond (> cnt 1)
+			       (let [[e1 e2]
+			             (cond 
+                     (= (second body) :just)
+                        [(list `just (first body)) (drop 2 body)]
+                     (= (second body) :lift)
+                        [(list `lift (first body)) (drop 2 body)]
+                     (= (second body) :apply)
+                     (if (> cnt 2)
+                         [ (list `apply (nth body 2) (list `lift (first body) ) ) (drop 3 body)]
+                         1
+                       )
+			               :else
+			               [(list `>>= (first body) (second body)) (drop 2 body)])]
+			             
+			             (cons `>>=* (cons e1 e2)))
+              (= cnt 1) 
+               (first body)
+              :else
+               body
+            )))
+			             
+             
+       
+  
+  
 
 ;;(fmap* 1 2 +)
 ;;(fmap* + 1 2)

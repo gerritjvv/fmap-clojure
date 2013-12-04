@@ -18,12 +18,12 @@ functions and data with simple constructs so that the logic and meaning is both 
 
 Two such constructs that are central to functional composition is: fmap and <*> or in other words Functors and Applicatives.
 
-## The path to elegant functional composition
+# The path to elegant functional composition
 
 To be able to do functional composition elegantly we need some high level constructs, just as functional programming builds on map, reduce, filter etc, 
 we will build on fmap, and <*> or otherwise said Functors and Applicatives.
 
-### fmap
+## fmap >>=
 
 Functors in essence are nothing more than a type implementation that defines how a function should be applied to a certain type.
 So that if we say ```(fmap 1 inc)``` the functor implementation for Object would apply 1 to inc, if we said ```(fmap nil inc)```
@@ -32,6 +32,8 @@ the functor implementation for nil would return nil directly and not apply the f
 Now there is some dellusion arround the Maybe Functor Monad etc... its application is simple and not magical,
 it goes as if a value apply it to the function if no value do not apply (thats it). In clojure we do this by
 providing functor implementations for nil and Object.
+
+Throughout the code >>= and fmap means the same, there is a separate ```(def >>= fmap)``` statement in the library.
 
 Functors in clojure can be implemented using protocols and extend type, i.e. we create a protocol Functor with a function fmap.
 
@@ -105,14 +107,17 @@ Example
 ```
 (fmap [1 2 3] inc)
 ;; [2 3 4]
+(>>= [1 2 3] inc)
+;; [2 3 4]
 (fmap (->Just [1 2 3]) count)
 ;; (Just 3)
 (-> (fmap (->Just [1 2 3]) count) (fmap str) lift)
 ```
 
-### <*> the applicative
+## <*> the applicative
 
-Now Applicative is just a fancy name for a function that takes a sequence of functions and apply them to a sequence returning the combined results.
+Now Applicative is just a fancy name for a function that takes a sequence of functions and apply them to a sequence returning the combined results,
+another definition would be taking a function with a context and applying it to a value inside a context.
 
 In Haskell this is ```<*>``` and in clojure we can use the same naming so that we can do:
 
@@ -129,11 +134,84 @@ In Haskell this is ```<*>``` and in clojure we can use the same naming so that w
 ```
 
 
-## Overview Message passing
+## What do we have now?
+
+fmap and <*>,  are two functions that apply values to functions and boxed functions to values in a generic way using only two functions.
+For most of the time we can only use fmap (>>=) , and <*> uses fmap internally.
+
+In other words, we have functors and on top of functors we have applicatives, but most of the time we will only need functors.
+
+Functional composition is much more that just composing two functions, its about how to apply functions two data and how data
+flows between a series of functions. It allows us to write our functions separately and then write out final logic out as a
+series of data and functions binding each step to the next. 
 
 
+## Left right data flow
 
+The macro ```>>=*``` applies fmap (>>=) to the expressions in such a way that if we write ```(>>=* [1 2 3]  inc dec)```
+the expression is translated to ```(>>= (>>= [1 2 3] inc) dec)```. Writing expressions from left to right instead of nested makes the code
+easier to read and comprehend.
 
+The ```>>=*``` macro has a few directives to change the way data and functions are applied.
+
+## :just and :lift ##
+
+For ```:just``` the result of the expression so far is translated into a ```Just``` instance, the ```:lift``` directive
+will apply the result to the lift function and for ```Just``` this means extracting the value from the ```Just``` context.
+
+This is useful if you want to pass a list as a function argument.
+
+e.g.
+
+```clojure
+(>>=* [1 2 3] count)
+;; fails because count is applied to 1 then 2 and then 3
+(>>=* [1 2 3] inc vector count)
+;; (1 1 1)
+(>>=* [1 2 3] inc :just count)
+;; fmap_clojure.core.Just{:v 3}
+(>>=* [1 2 3] inc vector :just count :lift)
+;; 3
+```
+
+## :apply ##
+
+Apply uses three arguments, one; the result of the expression so far on the left hand side, two; ```:apply``` directory, three: the function on the immediate right of ```:apply```.
+The expression is rewritten as (apply f result).
+
+e.g.
+
+```clojure 
+
+(>>=* [1 2 3] inc dec str)
+;; ["1" "2" "3"]
+(>>=* [1 2 3] inc dec :apply str)
+;; "123"
+
+```
+
+## Examples ##
+
+```clojure
+
+ (>>=* [1 2 3] inc dec :just) 
+   ;; fmap_clojure.core.Just{:v 3}
+   (>>=* [1 2 3] inc dec :just count :lift)
+   ;; 3
+   (>>=* [1 2 3] inc dec :apply str)
+   ;; "123"
+   (>>=* [1 2 3] inc dec str)
+   ;; ["1" "2" "3"]
+   
+```
+
+## Conclusion >>=* ##
+
+```>>>=*``` gives us fmap (>>=*), :lift, :just, :apply as tools to flow data through a series of expressions. 
+
+The logic is extendible to specific types by extending the Functor protocol.
+
+   
 ## License
 
 Distributed under the Eclipse Public License either version 1.0
