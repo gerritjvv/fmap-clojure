@@ -114,7 +114,7 @@ and then provide some basic typed implementations
 
 Now we can write:
 
-```
+```clojure
 (fmap nil inc)
 ;; nil
 (fmap 1 inc)
@@ -138,7 +138,7 @@ the same value as passed into the function, allowing us to always put lift at th
 
 Example
 
-```
+```clojure
 (fmap [1 2 3] inc)
 ;; [2 3 4]
 (>>= [1 2 3] inc)
@@ -153,7 +153,7 @@ Example
 Now Applicative is just a fancy name for a function that takes a sequence of functions and apply them to a sequence returning the combined results,
 another definition would be taking a function with a context and applying it to a value inside a context.
 
-In Haskell this is ```<*>``` and in clojure we can use the same naming so that we can do:
+In Haskell this is <*> and in clojure we can use the same naming so that we can do:
 
 ```clojure
 (defn <*> [fs args]
