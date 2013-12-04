@@ -22,6 +22,16 @@ Maven
 </dependency>
 ```
 
+# Namespace
+
+NS 
+``` (:require [fmap-clojure.core :refer [>>=* >>= fmap just lift]]) ```
+
+Repl
+
+```(use 'fmap-clojure.core)```
+
+
 # Rationale
 
 I've always been searching for a more concise and expressive way to write programs, 
@@ -227,7 +237,7 @@ e.g.
 
 ## Conclusion >>=* ##
 
-```>>>=*``` gives us fmap (>>=*), :lift, :just, :apply as tools to flow data through a series of expressions. 
+```>>>=*``` gives us ```fmap``` (```>>=*```), ```:lift```, ```:just```, ```:apply``` as tools to flow data through a series of expressions. 
 
 The logic is extendible to specific types by extending the Functor protocol.
 
