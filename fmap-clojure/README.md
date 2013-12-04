@@ -66,11 +66,14 @@ providing functor implementations for nil and Object.
 
 Throughout the code >>= and fmap means the same, there is a separate ```(def >>= fmap)``` statement in the library.
 
-Functors in clojure can be implemented using protocols and extend type, i.e. we create a protocol Functor with a function fmap.
+Functors in clojure can be implemented using protocols and extend type, i.e. we create a protocol Functor with a function fmap and lift,
+lift takes a value in some context and lifts it out of the context returning to lifted value.
+
 
 ```clojure 
 (defprotocol Functor
-     (fmap [t f]))
+     (fmap [t f])
+     (lift [v]))
 ```
 
 and then provide some basic typed implementations
