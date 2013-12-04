@@ -60,7 +60,7 @@ Functors in essence are nothing more than a type implementation that defines how
 So that if we say ```(fmap 1 inc)``` the functor implementation for Object would apply 1 to inc, if we said ```(fmap nil inc)```
 the functor implementation for nil would return nil directly and not apply the function.
 
-Now there is some dellusion arround the Maybe Functor Monad etc... its application is simple and not magical,
+Now there is some delusion arround the Maybe Functor Monad etc... its application is simple and not magical,
 it goes as if a value apply it to the function if no value do not apply (thats it). In clojure we do this by
 providing functor implementations for nil and Object.
 
@@ -230,11 +230,11 @@ e.g.
 
  (>>=* [1 2 3] inc dec :just) 
    ;; fmap_clojure.core.Just{:v 3}
-   (>>=* [1 2 3] inc dec :just count :lift)
+ (>>=* [1 2 3] inc dec :just count :lift)
    ;; 3
-   (>>=* [1 2 3] inc dec :apply str)
+ (>>=* [1 2 3] inc dec :apply str)
    ;; "123"
-   (>>=* [1 2 3] inc dec str)
+ (>>=* [1 2 3] inc dec str)
    ;; ["1" "2" "3"]
    
 ```
