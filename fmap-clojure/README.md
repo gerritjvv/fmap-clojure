@@ -24,7 +24,8 @@ Maven
 
 # Namespace
 
-NS 
+ns
+
 ``` (:require [fmap-clojure.core :refer [>>=* >>= fmap just lift]]) ```
 
 Repl
