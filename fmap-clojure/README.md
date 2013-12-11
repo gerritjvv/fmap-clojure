@@ -6,7 +6,7 @@ Clojure monad library by using functors and copying to simplicity of haskell
 
 Leiningen
 
-```[fmap-clojure "0.1.0"]```
+```[fmap-clojure "0.1.1"]```
 
 gradle 
 

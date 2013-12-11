@@ -1,4 +1,4 @@
-(defproject fmap-clojure "0.1.0"
+(defproject fmap-clojure "0.1.1"
   :description "Clojure monad library by using functors and copying to simplicity of haskell"
   :url "https://github.com/gerritjvv/fmap-clojure/tree/master/fmap-clojure"
   :license {:name "Eclipse Public License"
