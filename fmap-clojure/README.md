@@ -246,6 +246,11 @@ e.g.
 The logic is extendible to specific types by extending the Functor protocol.
 
    
+   
+## Monads ##
+
+The state monad.
+
 ## License
 
 Distributed under the Eclipse Public License either version 1.0
