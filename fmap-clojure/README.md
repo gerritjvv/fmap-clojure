@@ -188,10 +188,13 @@ easier to read and comprehend.
 
 The ```>>=*``` macro has a few directives to change the way data and functions are applied.
 
-## :just and :lift ##
+## :just, :lift and :jl ##
 
 For ```:just``` the result of the expression so far is translated into a ```Just``` instance, the ```:lift``` directive
 will apply the result to the lift function and for ```Just``` this means extracting the value from the ```Just``` context.
+
+The keyword ```:jl``` is a shorthand for writing ```expr :just expr :lift```, with
+```:jl``` this becomes ```expr :jl expr```
 
 This is useful if you want to pass a list as a function argument.
 
@@ -206,7 +209,11 @@ e.g.
 ;; fmap_clojure.core.Just{:v 3}
 (>>=* [1 2 3] inc vector :just count :lift)
 ;; 3
+(>>=* [1 2 3] inc vector :jl count )
+;; 3
+
 ```
+
 
 ## :apply ##
 
@@ -231,6 +238,8 @@ e.g.
  (>>=* [1 2 3] inc dec :just) 
    ;; fmap_clojure.core.Just{:v 3}
  (>>=* [1 2 3] inc dec :just count :lift)
+   ;; 3
+ (>>=* [1 2 3] inc dec :jl count)
    ;; 3
  (>>=* [1 2 3] inc dec :apply str)
    ;; "123"

@@ -129,7 +129,11 @@
            (cond (> cnt 1)
 			       (let [[e1 e2]
 			             (cond 
+                     (= (second body) :jl)
+                        [(list `>>=* (first body) `:just (nth body 2) `:lift) (drop 3 body)]
                      (= (second body) :just)
+                        [(list `just (first body)) (drop 2 body)]   
+                     (= (second body) :>>=)
                         [(list `just (first body)) (drop 2 body)]
                      (= (second body) :lift)
                         [(list `lift (first body)) (drop 2 body)]
