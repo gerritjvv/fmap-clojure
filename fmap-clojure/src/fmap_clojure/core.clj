@@ -41,7 +41,7 @@
    (lift [v] nil)
    
    clojure.lang.IFn
-   (fmap [v f] (prn "comp : " (type v))(comp f v))
+   (fmap [v f] (comp f v))
    (lift [v] v)
    
    clojure.lang.Seqable
