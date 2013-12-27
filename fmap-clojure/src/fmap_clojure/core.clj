@@ -44,17 +44,27 @@
    (fmap [v f] (comp f v))
    (lift [v] v)
    
+   java.util.Map
+   (fmap [v f] (f v))
+   (lift [v] v)
+   
+   clojure.lang.IPersistentMap
+   (fmap [v f] (f v))
+   (lift [v] v)
+
+   
    clojure.lang.Seqable
    (fmap [v f] (map f v))
    (lift [v] v)
    
-   clojure.lang.PersistentVector
-   (fmap [v f] (map f v))
-   (lift [v] v)
    
    java.util.Collection
    (fmap [v f] (map f v))
    (lift [v] v)
+
+   clojure.lang.PersistentVector
+   (fmap [v f] (map f v))
+   (lift [v] v)   
    
    SharedIO
    (fmap [ {:keys [k io]} f ]
