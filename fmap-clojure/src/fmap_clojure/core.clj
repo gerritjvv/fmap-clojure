@@ -152,6 +152,7 @@
                          [ (list `apply (nth body 2) (list `lift (first body) ) ) (drop 3 body)]
                          1
                        )
+                     
 			               :else
 			               [(list `>>= (first body) (second body)) (drop 2 body)])]
 			             
