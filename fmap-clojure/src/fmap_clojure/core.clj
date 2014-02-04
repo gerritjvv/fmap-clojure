@@ -57,6 +57,16 @@
    (fmap [v f] (map f v))
    (lift [v] v)
    
+   java.lang.Iterable
+   (fmap [^java.lang.Iterable v f]
+     (fmap (iterator-seq (.iterator v)) f))
+   (lift [v] v)
+   
+   java.util.Iterator
+   (fmap [^java.util.Iterator v f]
+     (fmap (iterator-seq v) f))
+   (lift [v] v)
+   
    
    java.util.Collection
    (fmap [v f] (map f v))

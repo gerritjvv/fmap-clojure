@@ -6,11 +6,11 @@ Clojure monad library by using functors and copying to simplicity of haskell
 
 Leiningen
 
-```[fmap-clojure "0.1.3"]```
+```[fmap-clojure "0.1.5"]```
 
 gradle 
 
-```compile "fmap-clojure:fmap-clojure:0.1.3"```
+```compile "fmap-clojure:fmap-clojure:0.1.5"```
 
 Maven
 
@@ -18,7 +18,7 @@ Maven
 <dependency>
   <groupId>fmap-clojure</groupId>
   <artifactId>fmap-clojure</artifactId>
-  <version>0.1.3</version>
+  <version>0.1.5</version>
 </dependency>
 ```
 
