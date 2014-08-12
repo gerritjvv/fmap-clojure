@@ -1,4 +1,7 @@
 (ns fmap-clojure.core
+  (:import
+    (java.util Map Iterator Collection)
+    (clojure.lang IPersistentVector Seqable IPersistentMap IFn Atom IRef PersistentVector))
   (:require [fun-utils.core :refer [star-channel]])
   )
 
@@ -39,48 +42,59 @@
    nil
    (fmap [v f] nil)
    (lift [v] nil)
-   
-   clojure.lang.IFn
+
+   IFn
    (fmap [v f] (comp f v))
    (lift [v] v)
-   
-   java.util.Map
+
+   Map
    (fmap [v f] (f v))
    (lift [v] v)
-   
-   clojure.lang.IPersistentMap
+
+   IPersistentMap
    (fmap [v f] (f v))
    (lift [v] v)
 
    
-   clojure.lang.Seqable
-   (fmap [v f] (map f v))
+   Seqable
+   (fmap [v f] (map #(fmap % f) v))
    (lift [v] v)
    
-   java.lang.Iterable
-   (fmap [^java.lang.Iterable v f]
+   Iterable
+   (fmap [^Iterable v f]
      (fmap (iterator-seq (.iterator v)) f))
    (lift [v] v)
    
-   java.util.Iterator
-   (fmap [^java.util.Iterator v f]
+   Iterator
+   (fmap [^Iterator v f]
      (fmap (iterator-seq v) f))
    (lift [v] v)
-   
-   
-   java.util.Collection
-   (fmap [v f] (map f v))
+
+   PersistentVector
+   (fmap [v f] (mapv #(fmap % f) v))
    (lift [v] v)
 
-   clojure.lang.PersistentVector
-   (fmap [v f] (map f v))
-   (lift [v] v)   
-   
+   Collection
+   (fmap [v f] (map #(fmap % f) v))
+   (lift [v] v)
+
    SharedIO
    (fmap [ {:keys [k io]} f ]
         ((:send shared-io-star-chan) k f io))
    (lift [v] v)
-   
+
+   ;;clojure reference types
+   Atom
+   (fmap [v f]
+     (atom (swap! v f)))
+   (lift [v] (deref v))
+
+   IRef
+   (fmap [v f]
+     (dosync
+       (ref (alter v f))))
+   (lift [v]
+     (deref v))
   )
 
 (extend-protocol Applicative
@@ -105,7 +119,7 @@
       (for [f fs 
         a args] (fmap a f)))
    
-   clojure.lang.PersistentVector
+   clojure.lang.IPersistentVector
    (<*> [fs args]
       (for [f fs 
         a args] (fmap a f)))
@@ -122,15 +136,6 @@
   )
 
 (defn ID [x] x)
-
-(defmacro f [& args]
-  "Functional composition macro, that allows us to compose functions implicitely using fmap
-   and explictely using <*> to move data through logic all composed from left to right.
-   (f 1 f1 [f2 f3] <*> [b c] f4) => (apply f4 (fmap f1 a) (for [p [f2 f3] q [b c]] (fmap p a)) )
-   or
-   (1 2 3 4 inc) => (apply inc 1 2 3 4)
-   "
-  )
 
 (def >>= fmap)
 
